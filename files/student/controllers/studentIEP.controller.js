@@ -31,9 +31,6 @@ const getStudentController = async (req, res, next) => {
     StudentService.getStudentService(req.query, res.locals.jwt)
   )
 
-  console.log("jwt", res.locals.jwt)
-
-  console.log("error", error)
   if (error) return next(error)
 
   if (!data.success) return next(new CustomError(data.msg, BAD_REQUEST, data))

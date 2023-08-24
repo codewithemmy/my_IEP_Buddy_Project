@@ -14,10 +14,7 @@ const studentSchema = new mongoose.Schema(
     },
     studentName: String,
     goal: String,
-    goalObjectiveGenerator: String,
-    accommodationGenerator: String,
-    presentLevelGenerator: String,
-    progressMonitoringIdeas: String,
+    result: String,
     teacher: { type: mongoose.Types.ObjectId, ref: "User" },
   },
   { timestamps: true }
