@@ -17,6 +17,6 @@ const {
 userRoute.route("/").post(createUserController)
 userRoute.route("/login").post(userLoginController)
 userRoute.route("/generate").post(generateImageController)
-userRoute.route("/completion").post(IEPGoalController)
+userRoute.route("/Individualized-Education-Program").post(IEPGoalController)
 
 module.exports = userRoute

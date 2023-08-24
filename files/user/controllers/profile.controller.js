@@ -77,7 +77,11 @@ const generateImageController = async (req, res, next) => {
 }
 
 const IEPGoalController = async (req, res, next) => {
-  const [error, data] = await manageAsyncOps(ProfileService.IEPGoalService())
+  const [error, data] = await manageAsyncOps(
+    ProfileService.IEPGoalService(req.body)
+  )
+
+  console.log("error", error)
 
   if (error) return next(error)
 

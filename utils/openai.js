@@ -32,14 +32,7 @@ const generateImage = async (prompt, size) => {
   }
 }
 
-const completionIEP = async () => {
-  const prompt = `determine an IEP for a student trying to get admission to a college. Return response in the following 
-  JSON parsable format:
-  {
-    "goal": "answer",
-  "IEP": "answer"
-  }
-`
+const completionIEP = async (prompt) => {
   try {
     const completion = await openai.completions.create({
       model: "text-davinci-003",
@@ -57,7 +50,6 @@ const completionIEP = async () => {
     } else {
       console.log(error.message)
     }
-    res.status(400).json({ success: false, error: `Unable to generate IEP` })
   }
 }
 
