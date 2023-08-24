@@ -4,7 +4,7 @@ const {
   verifyToken,
   generateOtp,
 } = require("../../utils")
-const { sendMailNotification } = require("../../utils/email")
+// const { sendMailNotification } = require("../../utils/email")
 const createHash = require("../../utils/createHash")
 const { sendSms } = require("../../utils/sms")
 const { AuthFailure, AuthSuccess } = require("./auth.messages")
@@ -47,16 +47,16 @@ class AuthService {
     await user.save()
 
     /**send otp to email or phone number*/
-    const substitutional_parameters = {
-      resetOtp: otp,
-    }
+    // const substitutional_parameters = {
+    //   resetOtp: otp,
+    // }
 
-    await sendMailNotification(
-      email,
-      "Reset Password",
-      substitutional_parameters,
-      "RESET_OTP"
-    )
+    // await sendMailNotification(
+    //   email,
+    //   "Reset Password",
+    //   substitutional_parameters,
+    //   "RESET_OTP"
+    // )
 
     return { success: true, msg: AuthSuccess.OTP_SENT, otp: otp, id: user._id }
   }
@@ -93,17 +93,17 @@ class AuthService {
     await user.save()
 
     /** once the created send otp mail for verification, if accountType is citybuilder send otp to phone number*/
-    const substitutional_parameters = {
-      name: user.fullName,
-      emailOtp: otp,
-    }
+    // const substitutional_parameters = {
+    //   name: user.fullName,
+    //   emailOtp: otp,
+    // }
 
-    await sendMailNotification(
-      email,
-      "Verify OTP",
-      substitutional_parameters,
-      "VERIFICATION"
-    )
+    // await sendMailNotification(
+    //   email,
+    //   "Verify OTP",
+    //   substitutional_parameters,
+    //   "VERIFICATION"
+    // )
 
     return {
       success: true,

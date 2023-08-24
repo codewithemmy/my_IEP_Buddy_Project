@@ -11,9 +11,7 @@ const createHash = require("../../../utils/createHash")
 const { UserSuccess, UserFailure } = require("../user.messages")
 const { UserRepository } = require("../user.repository")
 const { LIMIT, SKIP, SORT } = require("../../../constants")
-const { sendMailNotification } = require("../../../utils/email")
-
-//create UserService Class
+// const { sendMailNotification } = require("../../../utils/email")
 class UserService {
   static async createUser(payload) {
     const { fullName, email } = payload

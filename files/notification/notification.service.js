@@ -4,7 +4,7 @@ const { queryConstructor, verifyWhoAmI } = require("../../utils/index")
 const { notificationMessages } = require("./notification.messages")
 const { UserRepository } = require("../user/user.repository")
 const { UserFailure } = require("../user/user.messages")
-const { sendMailNotification } = require("../../utils/email")
+// const { sendMailNotification } = require("../../utils/email")
 
 class NotificationService {
   static async create(payload) {
@@ -66,15 +66,15 @@ class NotificationService {
         break
       case "email":
         //email notification
-        deliverNotification = await sendMailNotification(
-          recipient.email,
-          title,
-          {
-            msg,
-            name: recipient.fullName,
-          },
-          "NOTIFICATIONS"
-        )
+        // deliverNotification = await sendMailNotification(
+        //   recipient.email,
+        //   title,
+        //   {
+        //     msg,
+        //     name: recipient.fullName,
+        //   },
+        //   "NOTIFICATIONS"
+        // )
 
         if (!deliverNotification.success) success = false
         break
