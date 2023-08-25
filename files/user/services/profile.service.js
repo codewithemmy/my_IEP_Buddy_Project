@@ -138,9 +138,7 @@ class ProfileService {
     struggle in ${struggle}. Targeting this date ${IEPDate} as objective to meet this baseline ${baseLine}, considering 
     ${studentName} interest which are ${studentInterest} and criteria ${criteria} to be met. what will be the Individualized 
     Education Plan for ${studentName}.
-    Return response in the following 
-  JSON parsable format: 
-    JSON parsable format:
+    Return response in the following JSON parsable format:
   {
     "goal": "answer", 
     "IEP": "answer"
@@ -150,13 +148,34 @@ class ProfileService {
 
     if (payload.type === "accommodation") {
       const { studentName, goal, information } = payload
-      prompt = `based on ${studentName} wtih this goal: ${goal}. What is your Individualized 
+      prompt = `based on ${studentName} with this goal: ${goal}. What is your Individualized 
     Education Plan (IEP) suggestion considering this: ${information}.
-    Return response in the following 
-  JSON parsable format: 
-    JSON parsable format:
+    Return response in the following JSON parsable format: 
+
   {
     "accommodation": "answer"
+  }
+`
+    }
+
+    if (payload.type === "presentLevel") {
+      const { studentName, goal, information } = payload
+      prompt = `based on ${studentName} with this goal: ${goal}. What is the Individualized 
+    Education Plan (IEP) present level for ${studentName} considering this: ${information}.
+    Return response in the following JSON parsable format:
+  {
+    "presentLevel": "answer"
+  }
+`
+    }
+
+    if (payload.type === "progressMonitoring") {
+      const { studentName, goal } = payload
+      prompt = `As a teacher, using Individualized 
+    Education Plan (IEP) - List or outline different ways to monitor the progress of ${studentName} with this goal: ${goal}.
+    Return response in the following JSON parsable format:
+  {
+    "progressMonitoring": "answer"
   }
 `
     }
@@ -168,7 +187,7 @@ class ProfileService {
 
     return {
       success: true,
-      msg: UserSuccess.FETCH,
+      msg: `IEP fetched successfully`,
       data: result,
       student: studentName,
     }
