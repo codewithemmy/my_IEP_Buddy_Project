@@ -5,8 +5,7 @@ class TransactionRepository {
     return Transaction.create({ ...transactionPayload })
   }
 
-  static async fetchOne(payload, populate = false) {
-    if (populate) return Transaction.findOne({ ...payload }).populate("loanId")
+  static async fetchOne(payload) {
     return Transaction.findOne({ ...payload })
   }
 
@@ -15,7 +14,6 @@ class TransactionRepository {
     const transaction = await Transaction.find({
       ...restOfPayload,
     })
-      .populate("userId", { _id: 1, fullName: 1, image: 1 })
       .sort(sort)
       .skip(skip)
       .limit(limit)
@@ -27,20 +25,13 @@ class TransactionRepository {
   }
 
   static async updateTransactionDetails(transactionPayload, update) {
-    const { lastErrorObject: response } = await Transaction.findOneAndUpdate(
+    return await Transaction.findOneAndUpdate(
       {
         ...transactionPayload,
       },
       { ...update },
       { rawResult: true } //returns details about the update
     )
-
-    return response
-  }
-
-  static async fetchLendersTransactionHistory(payload) {
-    const transactionDetails = await Transaction.aggregate([...payload])
-    return transactionDetails
   }
 }
 

@@ -18,7 +18,13 @@ class TransactionService {
   }
 
   static async initiatePaymentIntentTransaction(payload) {
-    const { amount } = payload
+    const { amount, userId, channel } = payload
+
+    const user = await UserRepository.findSingleUserWithParams({
+      _id: new mongoose.Types.ObjectId(userId),
+    })
+
+    if (!user) return { success: false, msg: `user not found` }
 
     await this.getConfig()
     const paymentDetails = await this.paymentProvider.createPaymentIntent({
@@ -28,6 +34,18 @@ class TransactionService {
     if (!paymentDetails)
       return { success: false, msg: `unable to make or create payment intent` }
 
+    const { clientSecret, transactionId } = paymentDetails
+
+    await TransactionRepository.create({
+      name: user.fullName,
+      email: user.email,
+      amount,
+      userId,
+      channel,
+      clientSecret,
+      transactionId,
+    })
+
     return {
       success: true,
       msg: TransactionSuccess.INITIATE,
@@ -35,46 +53,35 @@ class TransactionService {
     }
   }
 
-  static async initiateWithdrawalTransaction() {}
+  static async verifyStripePaymentService(payload) {
+    const { transactionId, status } = payload
 
-  static async verifyPaymentManually(payload) {
-    await this.getConfig()
-    return this.paymentProvider.verifyProviderPayment(payload.reference)
+    const transaction = await TransactionRepository.fetchOne({
+      transactionId: transactionId,
+    })
+
+    if (!transaction) return { success: false, msg: `transaction not found` }
+
+    if (status === "succeeded") {
+      transaction.status = "confirmed"
+      await transaction.save()
+
+      return {
+        success: true,
+        msg: `transaction status update successful`,
+      }
+    }
+
+    if (status === "failed") {
+      transaction.status = "failed"
+      await transaction.save()
+
+      return {
+        success: true,
+        msg: `transaction status update successful`,
+      }
+    }
   }
-
-  // static initiatePaymentIntentTransaction() {
-  //   const order = await Order.findOne({ _id: req.body.orderId })
-
-  //   if (!order) {
-  //     return res.status(200).json({ msg: `invalid order Id` })
-  //   }
-
-  //   const transaction = await Transaction.create({
-  //     ...req.body,
-  //     customerId: req.user.userId,
-  //   })
-
-  //   if (req.body.transactionStatus === "Succeeded") {
-  //     //update order with the transaction id
-  //     order.transaction = transaction._id
-  //     order.paymentStatus = "paid"
-
-  //     await order.save()
-  //     return res
-  //       .status(200)
-  //       .json({ msg: "transaction successfully created/updated" })
-  //   } else {
-  //     //update order with the transaction id
-  //     order.transaction = transaction._id
-  //     order.paymentStatus = "failed"
-
-  //     await order.save()
-
-  //     return res
-  //       .status(200)
-  //       .json({ msg: "transaction successfully created/updated" })
-  //   }
-  // }
 }
 
 module.exports = { TransactionService }

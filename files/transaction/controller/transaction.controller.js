@@ -17,22 +17,23 @@ const paymentIntentTransactionController = async (req, res, next) => {
   return responseHandler(res, SUCCESS, data)
 }
 
-// const paystackWebHook = async (req, res, next) => {
-//   const hash = crypto
-//     .createHmac("sha512", config.PAYSTACK_KEY)
-//     .update(JSON.stringify(req.body))
-//     .digest("hex")
+module.exports = {
+  paymentIntentTransactionController,
+}
 
-//   if (hash == req.headers["x-paystack-signature"]) {
-//     // Retrieve the request's body
-//     const event = req.body
-//     const [error, data] = await manageAsyncOps(
-//       TransactionService.verifyCardPayment(event)
-//     )
-//     res.send(200)
-//   }
-// }
+const verifyTransactionController = async (req, res, next) => {
+  const [error, data] = await manageAsyncOps(
+    TransactionService.verifyStripePaymentService(req.body)
+  )
+
+  if (error) return next(error)
+
+  if (!data.success) return next(new CustomError(data.msg, BAD_REQUEST, data))
+
+  return responseHandler(res, SUCCESS, data)
+}
 
 module.exports = {
   paymentIntentTransactionController,
+  verifyTransactionController,
 }

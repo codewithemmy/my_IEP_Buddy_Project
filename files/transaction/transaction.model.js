@@ -2,13 +2,15 @@ const mongoose = require("mongoose")
 
 const TransactionSchema = new mongoose.Schema(
   {
-    userType: {
-      type: String,
-      required: true,
-    },
     userId: {
       type: mongoose.Types.ObjectId,
-      refPath: "userType",
+      ref: "User",
+    },
+    name: {
+      type: String,
+    },
+    email: {
+      type: String,
     },
     amount: {
       type: Number,
@@ -19,24 +21,19 @@ const TransactionSchema = new mongoose.Schema(
       required: true,
       enum: ["stripe", "other"],
     },
-    reference: {
+    transactionId: {
       type: String,
-      required: true,
+    },
+    clientSecret: {
+      type: String,
     },
     status: {
       type: String,
-      enum: ["pending", "confirmed", "failed"],
+      enum: ["pending", "confirmed", "failed", "expired"],
       default: "pending",
     },
     paymentFor: {
       type: String,
-      enum: [
-        "loanSubmission",
-        "loanRepayment",
-        "cardInitilization",
-        "enterpriseSubscription",
-        "loanCrediting",
-      ],
     },
     metaData: String,
   },
