@@ -31,9 +31,7 @@ class TransactionService {
     return {
       success: true,
       msg: TransactionSuccess.INITIATE,
-      data: {
-        ...paymentDetails,
-      },
+      data: paymentDetails,
     }
   }
 
@@ -43,6 +41,40 @@ class TransactionService {
     await this.getConfig()
     return this.paymentProvider.verifyProviderPayment(payload.reference)
   }
+
+  // static initiatePaymentIntentTransaction() {
+  //   const order = await Order.findOne({ _id: req.body.orderId })
+
+  //   if (!order) {
+  //     return res.status(200).json({ msg: `invalid order Id` })
+  //   }
+
+  //   const transaction = await Transaction.create({
+  //     ...req.body,
+  //     customerId: req.user.userId,
+  //   })
+
+  //   if (req.body.transactionStatus === "Succeeded") {
+  //     //update order with the transaction id
+  //     order.transaction = transaction._id
+  //     order.paymentStatus = "paid"
+
+  //     await order.save()
+  //     return res
+  //       .status(200)
+  //       .json({ msg: "transaction successfully created/updated" })
+  //   } else {
+  //     //update order with the transaction id
+  //     order.transaction = transaction._id
+  //     order.paymentStatus = "failed"
+
+  //     await order.save()
+
+  //     return res
+  //       .status(200)
+  //       .json({ msg: "transaction successfully created/updated" })
+  //   }
+  // }
 }
 
 module.exports = { TransactionService }

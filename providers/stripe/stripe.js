@@ -27,9 +27,8 @@ class StripePaymentService {
           success: false,
           msg: `error creating payment intent, try again later`,
         }
+
       return {
-        success: true,
-        msg: "successful",
         clientSecret: paymentIntent.client_secret,
         transactionId: paymentIntent.id,
         amount: paymentIntent.amount,
