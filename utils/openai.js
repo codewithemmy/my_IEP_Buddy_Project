@@ -37,7 +37,7 @@ const completionIEP = async (prompt) => {
     const completion = await openai.completions.create({
       model: "text-davinci-003",
       prompt: prompt,
-      max_tokens: 1024,
+      max_tokens: 2048,
       temperature: 1,
     })
 

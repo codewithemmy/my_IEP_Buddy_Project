@@ -63,7 +63,7 @@ class TransactionService {
     if (!transaction) return { success: false, msg: `transaction not found` }
 
     if (status === "succeeded") {
-      transaction.status = "confirmed"
+      transaction.status = "active"
       await transaction.save()
 
       return {
