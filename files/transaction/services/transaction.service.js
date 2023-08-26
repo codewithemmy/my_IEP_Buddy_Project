@@ -82,6 +82,34 @@ class TransactionService {
       }
     }
   }
+
+  static async getTransactionService(payload, locals) {
+    const { error, params, limit, skip, sort } = queryConstructor(
+      payload,
+      "createdAt",
+      "Transaction"
+    )
+    if (error) return { success: false, msg: error }
+
+    let teacher = { userId: new mongoose.Types.ObjectId(locals._id) }
+
+    const transaction = await TransactionRepository.fetchTransactionsByParams({
+      ...params,
+      limit,
+      skip,
+      sort,
+      ...teacher,
+    })
+
+    if (transaction.length < 1)
+      return { success: false, msg: `you don't have any transaction history` }
+
+    return {
+      success: true,
+      msg: `transaction fetched successfully  `,
+      data: transaction,
+    }
+  }
 }
 
 module.exports = { TransactionService }

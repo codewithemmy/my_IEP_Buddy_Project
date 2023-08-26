@@ -33,7 +33,22 @@ const verifyTransactionController = async (req, res, next) => {
   return responseHandler(res, SUCCESS, data)
 }
 
+const getTransactionController = async (req, res, next) => {
+  const [error, data] = await manageAsyncOps(
+    TransactionService.getTransactionService(req.query, res.locals.jwt)
+  )
+  console.log("error", error)
+  console.log("locals", res.locals.jwt)
+
+  if (error) return next(error)
+
+  if (!data.success) return next(new CustomError(data.msg, BAD_REQUEST, data))
+
+  return responseHandler(res, SUCCESS, data)
+}
+
 module.exports = {
   paymentIntentTransactionController,
   verifyTransactionController,
+  getTransactionController,
 }
