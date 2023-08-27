@@ -29,8 +29,12 @@ const TransactionSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ["pending", "active", "failed", "expired"],
+      enum: ["pending", "paid", "failed"],
       default: "pending",
+    },
+    subscriptionType: {
+      type: String,
+      enum: ["yearly", "monthly"],
     },
     paymentFor: {
       type: String,

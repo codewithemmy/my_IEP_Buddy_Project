@@ -10,6 +10,10 @@ const {
 const createHash = require("../../../utils/createHash")
 const { UserSuccess, UserFailure } = require("../user.messages")
 const { UserRepository } = require("../user.repository")
+const {
+  SubscriptionRepository,
+} = require("../../subscription/subscription.repository")
+
 const { LIMIT, SKIP, SORT } = require("../../../constants")
 // const { sendMailNotification } = require("../../../utils/email")
 class UserService {
@@ -49,33 +53,43 @@ class UserService {
     })
 
     if (!userProfile) return { success: false, msg: UserFailure.USER_EXIST }
-
-    const isPassword = await verifyPassword(password, userProfile.password)
-
-    if (!isPassword) return { success: false, msg: UserFailure.PASSWORD }
-
-    let token
-
-    token = await tokenHandler({
-      _id: userProfile._id,
-      fullName: userProfile.fullName,
-      email: userProfile.email,
-      isAdmin: false,
+    const activeSubscription = await SubscriptionRepository.fetch({
+      userId: new mongoose.Types.ObjectId(userProfile._id),
     })
 
-    const user = {
-      _id: userProfile._id,
-      fullName: userProfile.fullName,
-      email: userProfile.email,
-      status: userProfile.status,
-      ...token,
-    }
+    if (!activeSubscription) {
+      return {
+        success: false,
+        msg: `Not a subscribed user, complete your subscription to login`,
+      }
+    } else {
+      const isPassword = await verifyPassword(password, userProfile.password)
 
-    //return result
-    return {
-      success: true,
-      msg: UserSuccess.FETCH,
-      data: user,
+      if (!isPassword) return { success: false, msg: UserFailure.PASSWORD }
+
+      let token
+
+      token = await tokenHandler({
+        _id: userProfile._id,
+        fullName: userProfile.fullName,
+        email: userProfile.email,
+        isAdmin: false,
+      })
+
+      const user = {
+        _id: userProfile._id,
+        fullName: userProfile.fullName,
+        email: userProfile.email,
+        status: userProfile.status,
+        ...token,
+      }
+
+      //return result
+      return {
+        success: true,
+        msg: UserSuccess.FETCH,
+        data: user,
+      }
     }
   }
 }
