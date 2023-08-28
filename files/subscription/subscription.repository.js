@@ -27,13 +27,6 @@ class SubscriptionRepository {
       .limit(limit)
       .select(select)
   }
-
-  static async update(id, params) {
-    return Subscription.findOneAndUpdate(
-      { enterpriseId: new mongoose.Types.ObjectId(id) },
-      { ...params }
-    )
-  }
 }
 
 module.exports = { SubscriptionRepository }

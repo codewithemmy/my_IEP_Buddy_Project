@@ -1,5 +1,4 @@
 const { default: mongoose } = require("mongoose")
-const moment = require("moment")
 const { SubscriptionRepository } = require("./subscription.repository")
 const { queryConstructor } = require("../../utils")
 const { SubscriptionMessages } = require("./subscription.message")
